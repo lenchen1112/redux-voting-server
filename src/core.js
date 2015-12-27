@@ -28,6 +28,7 @@ export function next (state) {
 
     return state.merge({
         vote: Map({
+            round: state.getIn(['vote', 'round'], 0) + 1,
             pair: entries.take(2)
         }),
         entries: entries.skip(2)

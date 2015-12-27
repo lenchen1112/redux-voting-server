@@ -39,6 +39,7 @@ describe('application logic', () => {
 
             expect(nextState).to.equal(Map({
                 vote: Map({
+                    round: 1,
                     pair: List.of('Movie ID 1', 'Movie ID 2')
                 }),
                 entries: List.of('Movie ID 3')
@@ -48,6 +49,7 @@ describe('application logic', () => {
         it('puts winner of current vote back to entries', () => {
             const state = Map({
                 vote: Map({
+                    round: 1,
                     pair: List.of('Movie ID 1', 'Movie ID 2'),
                     tally: Map({
                         'Movie ID 1': 2,
@@ -60,6 +62,7 @@ describe('application logic', () => {
 
             expect(nextState).to.equal(Map({
                 vote: Map({
+                    round: 2,
                     pair: List.of('Movie ID 3', 'Movie ID 4')
                 }),
                 entries: List.of('Movie ID 5', 'Movie ID 2')
@@ -69,6 +72,7 @@ describe('application logic', () => {
         it('puts both from tied vote back to entries', () => {
             const state = Map({
                 vote: Map({
+                    round: 1,
                     pair: List.of('Movie ID 1', 'Movie ID 2'),
                     tally: Map({
                         'Movie ID 1': 3,
@@ -81,6 +85,7 @@ describe('application logic', () => {
 
             expect(nextState).to.equal(Map({
                 vote: Map({
+                    round: 2,
                     pair: List.of('Movie ID 3', 'Movie ID 4')
                 }),
                 entries: List.of('Movie ID 5', 'Movie ID 1', 'Movie ID 2')
@@ -90,6 +95,7 @@ describe('application logic', () => {
         it('marks winner when just one entry left', () => {
             const state = Map({
                 vote: Map({
+                    round: 1,
                     pair: List.of('Movie ID 3', 'Movie ID 5'),
                     tally: Map({
                         'Movie ID 3': 7,
@@ -111,11 +117,13 @@ describe('application logic', () => {
 
         it('creates a tally for the voted entry', () => {
             const state = Map({
+                round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2')
             });
             const nextState = vote(state, 'Movie ID 1');
 
             expect(nextState).to.equal(Map({
+                round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2'),
                 tally: Map({
                     'Movie ID 1': 1
@@ -125,6 +133,7 @@ describe('application logic', () => {
 
         it('adds existing tally for the voted entry', () => {
             const state = Map({
+                round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2'),
                 tally: Map({
                     'Movie ID 1': 2,
@@ -134,6 +143,7 @@ describe('application logic', () => {
             const nextState = vote(state, 'Movie ID 1');
 
             expect(nextState).to.equal(Map({
+                round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2'),
                 tally: Map({
                     'Movie ID 1': 3,
@@ -144,10 +154,12 @@ describe('application logic', () => {
 
         it('ignores the vote if for an invalid entry', () => {
             const state = Map({
+                round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2')
             });
             const nextState = vote(state, 'whatever');
             expect(nextState).to.equal(Map({
+                round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2')
             }));
         });
