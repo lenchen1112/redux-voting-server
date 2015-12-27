@@ -48,7 +48,7 @@ describe('reducer', () => {
             },
             entries: []
         });
-        const action = {type: 'VOTE', entry: 'Movie ID 1'};
+        const action = {type: 'VOTE', entry: 'Movie ID 1', clientId: 'Client ID 1'};
         const nextState = reducer(initialState, action);
 
         expect(nextState).to.equal(fromJS({
@@ -57,9 +57,28 @@ describe('reducer', () => {
                 pair: ['Movie ID 1', 'Movie ID 2'],
                 tally: {
                     'Movie ID 1': 1
+                },
+                votes: {
+                    'Client ID 1': 'Movie ID 1'
                 }
             },
             entries: []
+        }));
+    });
+
+    it('can be used with reduce', () => {
+        const actions = [
+            {type: 'SET_ENTRIES', entries: ['Movie ID 1', 'Movie ID 2']},
+            {type: 'NEXT'},
+            {type: 'VOTE', entry: 'Movie ID 1', clientId: 'Client ID 1'},
+            {type: 'VOTE', entry: 'Movie ID 2', clientId: 'Client ID 2'},
+            {type: 'VOTE', entry: 'Movie ID 1', clientId: 'Client ID 3'},
+            {type: 'NEXT'}
+        ];
+        const finalState = actions.reduce(reducer, Map());
+
+        expect(finalState).to.equal(fromJS({
+            winner: 'Movie ID 1'
         }));
     });
 

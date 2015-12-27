@@ -120,13 +120,16 @@ describe('application logic', () => {
                 round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2')
             });
-            const nextState = vote(state, 'Movie ID 1');
+            const nextState = vote(state, 'Movie ID 1', 'Client ID 1');
 
             expect(nextState).to.equal(Map({
                 round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2'),
                 tally: Map({
                     'Movie ID 1': 1
+                }),
+                votes: Map({
+                    'Client ID 1': 'Movie ID 1'
                 })
             }));
         });
@@ -138,9 +141,10 @@ describe('application logic', () => {
                 tally: Map({
                     'Movie ID 1': 2,
                     'Movie ID 2': 3
-                })
+                }),
+                votes: Map()
             });
-            const nextState = vote(state, 'Movie ID 1');
+            const nextState = vote(state, 'Movie ID 1', 'Client ID 1');
 
             expect(nextState).to.equal(Map({
                 round: 1,
@@ -148,6 +152,9 @@ describe('application logic', () => {
                 tally: Map({
                     'Movie ID 1': 3,
                     'Movie ID 2': 3
+                }),
+                votes: Map({
+                    'Client ID 1': 'Movie ID 1'
                 })
             }));
         });
@@ -161,6 +168,33 @@ describe('application logic', () => {
             expect(nextState).to.equal(Map({
                 round: 1,
                 pair: List.of('Movie ID 1', 'Movie ID 2')
+            }));
+        });
+
+        it('nullifies previous vote for the same voter', () => {
+            const state = Map({
+                round: 1,
+                pair: List.of('Movie ID 1', 'Movie ID 2'),
+                tally: Map({
+                    'Movie ID 1': 5,
+                    'Movie ID 2': 8
+                }),
+                votes: Map({
+                    'Client ID 1': 'Movie ID 1'
+                })
+            });
+            const nextState = vote(state, 'Movie ID 2', 'Client ID 1');
+
+            expect(nextState).to.equal(Map({
+                round: 1,
+                pair: List.of('Movie ID 1', 'Movie ID 2'),
+                tally: Map({
+                    'Movie ID 1': 4,
+                    'Movie ID 2': 9
+                }),
+                votes: Map({
+                    'Client ID 1': 'Movie ID 2'
+                })
             }));
         });
 

@@ -15,6 +15,23 @@ function getWinners (vote) {
     return aVotes > bVotes ? [a] : [b];
 }
 
+function removePreviousVote (voteState, voter) {
+    const previousVote = voteState.getIn(['votes', voter]);
+    if (previousVote) {
+        return voteState.updateIn(['tally', previousVote], tally => tally -1)
+                        .removeIn(['votes', voter]);
+    }
+    return voteState;
+}
+
+function addVote (voteState, entry, voter) {
+    if (voteState.get('pair').includes(entry)) {
+        return voteState.updateIn(['tally', entry], 0, tally => tally + 1)
+                        .setIn(['votes', voter], entry);
+    }
+    return voteState;
+}
+
 export function setEntries (state, entries) {
     return state.set('entries', List(entries));
 };
@@ -35,11 +52,12 @@ export function next (state) {
     });
 };
 
-export function vote (state, entry) {
-    if (state.get('pair').includes(entry)) {
-        return state.updateIn(['tally', entry], 0, tally => tally + 1);
-    }
-    return state;
+export function vote (voteState, entry, voter) {
+    return addVote(
+        removePreviousVote(voteState, voter),
+        entry,
+        voter
+    );
 }
 
 export const INITIAL_STATE = Map();
