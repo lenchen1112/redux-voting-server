@@ -142,6 +142,16 @@ describe('application logic', () => {
             }));
         });
 
+        it('ignores the vote if for an invalid entry', () => {
+            const state = Map({
+                pair: List.of('Movie ID 1', 'Movie ID 2')
+            });
+            const nextState = vote(state, 'whatever');
+            expect(nextState).to.equal(Map({
+                pair: List.of('Movie ID 1', 'Movie ID 2')
+            }));
+        });
+
     });
 
 });
