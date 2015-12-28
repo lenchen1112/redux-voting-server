@@ -16,7 +16,8 @@ describe('store', () => {
         });
 
         expect(store.getState()).to.equal(fromJS({
-            entries: ['Movie ID 1', 'Movie ID 2']
+            entries: ['Movie ID 1', 'Movie ID 2'],
+            initialEntries: ['Movie ID 1', 'Movie ID 2']
         }));
     });
 

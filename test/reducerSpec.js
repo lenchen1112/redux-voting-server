@@ -10,7 +10,8 @@ describe('reducer', () => {
         const nextState = reducer(undefined, action);
 
         expect(nextState).to.equal(fromJS({
-            entries: ['Movie ID 1']
+            entries: ['Movie ID 1'],
+            initialEntries: ['Movie ID 1']
         }));
     });
 
@@ -20,7 +21,8 @@ describe('reducer', () => {
         const nextState = reducer(initialState, action);
 
         expect(nextState).to.equal(fromJS({
-            entries: ['Movie ID 1']
+            entries: ['Movie ID 1'],
+            initialEntries: ['Movie ID 1']
         }));
     });
 
@@ -78,7 +80,8 @@ describe('reducer', () => {
         const finalState = actions.reduce(reducer, Map());
 
         expect(finalState).to.equal(fromJS({
-            winner: 'Movie ID 1'
+            winner: 'Movie ID 1',
+            initialEntries: ['Movie ID 1', 'Movie ID 2']
         }));
     });
 

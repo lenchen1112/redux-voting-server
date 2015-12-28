@@ -1,7 +1,7 @@
 import {List, Map} from 'immutable';
 import {expect} from 'chai';
 
-import {setEntries, next, vote} from '../src/core';
+import {setEntries, next, vote, restart} from '../src/core';
 
 describe('application logic', () => {
 
@@ -13,7 +13,8 @@ describe('application logic', () => {
             const nextState = setEntries(state, entries);
 
             expect(nextState).to.equal(Map({
-                entries: List.of('Movie ID 1', 'Movie ID 2')
+                entries: List.of('Movie ID 1', 'Movie ID 2'),
+                initialEntries: List.of('Movie ID 1', 'Movie ID 2')
             }));
         });
 
@@ -23,7 +24,8 @@ describe('application logic', () => {
             const nextState = setEntries(state, entries);
 
             expect(nextState).to.equal(Map({
-                entries: List.of('Movie ID 1', 'Movie ID 2')
+                entries: List.of('Movie ID 1', 'Movie ID 2'),
+                initialEntries: List.of('Movie ID 1', 'Movie ID 2')
             }));
         });
 
@@ -108,6 +110,31 @@ describe('application logic', () => {
 
             expect(nextState).to.equal(Map({
                 winner: 'Movie ID 3'
+            }));
+        });
+
+    });
+
+    describe('restart', () => {
+
+        it('returns to initial entries and takes the first two entries under vote', () => {
+            const state = Map({
+                vote: Map({
+                    round: 1,
+                    pair: List.of('Movie ID 1', 'Movie ID 3')
+                }),
+                entries: List(),
+                initialEntries: List.of('Movie ID 1', 'Movie ID 2', 'Movie ID 3')
+            });
+            const nextState = restart(state);
+
+            expect(nextState).to.equal(Map({
+                vote: Map({
+                    round: 2,
+                    pair: List.of('Movie ID 1', 'Movie ID 2')
+                }),
+                entries: List.of('Movie ID 3'),
+                initialEntries: List.of('Movie ID 1', 'Movie ID 2', 'Movie ID 3')
             }));
         });
 
